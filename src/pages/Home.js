@@ -1,11 +1,18 @@
+
 import React from 'react'
+import { Col, Grid, Row } from 'rsuite'
+import Sidebar from '../Components/Sidebar'
 
 function Home() {
   return (
-    <div>
-      This is Home Pag
+    <Grid fluid className='h-100'>
+      <Row>
+        <Col xs={24} md={12}>
+          <Sidebar />
+        </Col>
 
-    </div>
+      </Row>
+    </Grid>
   )
 }
 
