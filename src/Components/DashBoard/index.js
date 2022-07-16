@@ -1,6 +1,7 @@
 import React from 'react'
-import { Button, Divider, Drawer } from 'rsuite'
+import { Alert, Button, Divider, Drawer } from 'rsuite'
 import { useProfile } from '../../Context/Profile.context'
+import { database } from '../../misc/firebase';
 import EditableInput from '../EditableInput';
 
 function DashBoard({ onSignOut }) {
@@ -10,7 +11,19 @@ function DashBoard({ onSignOut }) {
 
 
     const onSave = async (newData) => {
-        console.log(newData)
+        console.log("Profile inside ",profile)
+     const datapath=database.ref(`/profile/${profile.uid}/name`)
+
+     try {
+        datapath.set(newData);
+        Alert.success("Data in Database updated congratulation",4000)
+        
+     } catch (error) {
+        Alert.error(error.message,4000);
+        console.log("error",error.message)
+
+        
+     }
     }
 
     return (
