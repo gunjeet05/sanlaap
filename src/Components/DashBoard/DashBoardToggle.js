@@ -21,7 +21,7 @@ function DashBoardToggle() {
 
     </Button>
     <Drawer full ={isMobile} show={isOpen} onHide={close} placement="left">
-        <DashBoard onSignOut={onSignOut}/>
+    <DashBoard onSignOut={onSignOut}/>
     </Drawer>
 
    
