@@ -1,122 +1,116 @@
-import React, {  useCallback, useRef, useState } from 'react'
+import React, { useState, useCallback, useRef } from 'react';
 import {
-    Button,
-    Icon,
-    Modal,
-    Form,
-    FormControl,
-    FormGroup,
-    ControlLabel,
-    Schema,
-    Alert
-} from 'rsuite'
-import firebase from 'firebase/app'
-import { useModalState } from '../misc/CustomHook'
+  Button,
+  Icon,
+  Modal,
+  Form,
+  ControlLabel,
+  FormControl,
+  FormGroup,
+  Schema,
+  Alert,
+} from 'rsuite';
+import firebase from 'firebase/app';
+import { useModalState } from '../misc/CustomHook';
 import { database } from '../misc/firebase';
 
 
-
 const { StringType } = Schema.Types;
-const schemaModel = Schema.Model({
-    name: StringType().isRequired('Please Enter the name in correct Format'),
-    description: StringType().isRequired('Please Enter the Description in correct Format'),
+
+const model = Schema.Model({
+  name: StringType().isRequired('Chat name is required'),
+  description: StringType().isRequired('Description is required'),
 });
 
-const INITIAL = {
-    'name': '',
-    'description': ''
-}
+const INITIAL_FORM = {
+  name: '',
+  description: '',
+};
 
+const  CreateRoomButtonnModal= () => {
+  const { isOpen, open, close } = useModalState();
 
-const CreateRoomButtonModal = () => {
-    const formRef = useRef();
-    const { isOpen, open, close } = useModalState();
-    
-    const [formValue, setFormValue] = useState(INITIAL);
-    console.log("form value", formValue)
-    const [isLoading, setIsLoading] = useState(false);
-    const onFormChange = useCallback((value) => {
-        setFormValue(value);
-    },[]);
+  const [formValue, setFormValue] = useState(INITIAL_FORM);
+  const [isLoading, setIsLoading] = useState(false);
+  const formRef = useRef();
 
+  const onFormChange = useCallback(value => {
+    setFormValue(value);
+  }, []);
 
-    const onSubmit = async () => {
-
-        
-        console.log("form ref", formRef)
-        if (!formRef.current.check()) {
-            console.log("Reference Failled")
-            return;
-        }
-        setIsLoading(true);
-        const newRoomData = {
-            ...formValue,
-            createdAt: firebase.database.ServerValue.TIMESTAMP
-        }
-
-        try {
-            await database.ref('rooms').push(newRoomData);
-            Alert.success("Room data has been set to database", 4000);
-            setIsLoading(false);
-            setFormValue(INITIAL);
-            close();
-
-
-        } catch (err) {
-            setIsLoading(false);
-            Alert.error(`Error in setting room data to database :${err.message}`, 4000)
-
-        }
-
+  const onSubmit = async () => {
+    if (!formRef.current.check()) {
+      return;
     }
 
+    setIsLoading(true);
 
-    return (
-        <div className='mt-1'>
-            <Button block color='green' onClick={open}>
-                <Icon icon='creative' />Create Room
+    const newRoomdata = {
+      ...formValue,
+      createdAt: firebase.database.ServerValue.TIMESTAMP,
+    };
 
-            </Button>
+    try {
+      await database.ref('rooms').push(newRoomdata);
 
-            <Modal show={isOpen} onHide={close}>
-                <Modal.Header>
-                    <Modal.Title>
-                        Create new Room to chat With your Friends
+      Alert.info(`${formValue.name} has been created`, 4000);
 
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form
-                        fluid
-                        onChange={onFormChange}
-                        formValue={formValue}
-                        model={schemaModel}
-                        ref={formRef}
-                    >
-                        <FormGroup>
-                            <ControlLabel>
-                                Enter Name of Your Chat Room
-                            </ControlLabel>
-                            <FormControl name='room' placeholder="Enter name of your ChatRoom" />
-                        </FormGroup>
+      setIsLoading(false);
+      setFormValue(INITIAL_FORM);
+      close();
+    } catch (err) {
+      setIsLoading(false);
+      Alert.error(err.message, 4000);
+    }
+  };
 
-                        <FormGroup>
-                            <ControlLabel>
-                                Enter the Description of your ChatRoom
-                            </ControlLabel>
-                            <FormControl name='description' placeholder='Enter the description of your chatroom' componentClass='textarea' row={5} />
+  return (
+    <div className="mt-1">
+      <Button block color="green" onClick={open}>
+        <Icon icon="creative" /> Create new chat room
+      </Button>
 
-                        </FormGroup>
+      <Modal show={isOpen} onHide={close}>
+        <Modal.Header>
+          <Modal.Title>New chat room</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form
+            fluid
+            onChange={onFormChange}
+            formValue={formValue}
+            model={model}
+            ref={formRef}
+          >
+            <FormGroup>
+              <ControlLabel>Room name</ControlLabel>
+              <FormControl name="name" placeholder="Enter chat room name..." />
+            </FormGroup>
 
-                    </Form>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button block appearance='primary' onClick={onSubmit} disabled={isLoading}>Create New Room </Button>
-                </Modal.Footer>
-            </Modal>
+            <FormGroup>
+              <ControlLabel>Description</ControlLabel>
+              <FormControl
+                componentClass="textarea"
+                rows={5}
+                name="description"
+                placeholder="Enter room description..."
+              />
+            </FormGroup>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            block
+            appearance="primary"
+            onClick={onSubmit}
+            disabled={isLoading}
+          >
+            Create new chat room
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </div>
+  );
+};
 
-        </div>
-    )
-}
-
-export default CreateRoomButtonModal
+export default CreateRoomButtonnModal;
