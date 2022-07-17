@@ -17,12 +17,13 @@ export const ProfileProvider = function ProfileProvider({ children }) {
 
                 userRef.on('value', (snap) => {
                       
-                    const { name, createdTime } = snap.val();
+                    const { name, createdTime ,avatar} = snap.val();
 
                     console.log("name",name);
                     const data = {
                         name,
                         createdTime,
+                        avatar,
                         uid: authObj.uid,
                         email: authObj.email
 
