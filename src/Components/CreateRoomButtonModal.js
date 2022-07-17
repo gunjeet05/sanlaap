@@ -18,8 +18,8 @@ import { database } from '../misc/firebase';
 const { StringType } = Schema.Types;
 
 const model = Schema.Model({
-  name: StringType().isRequired('Chat name is required'),
-  description: StringType().isRequired('Description is required'),
+  name: StringType().isRequired('This Cannot be Empty kindly pick a name for your ChatRoom'),
+  description: StringType().isRequired('Kindly Enter the description of the the chat app'),
 });
 
 const INITIAL_FORM = {
