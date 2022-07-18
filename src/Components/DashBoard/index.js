@@ -13,19 +13,19 @@ function DashBoard({ onSignOut }) {
 
 
     const onSave = async (newData) => {
-        console.log("Profile inside ",profile)
-     const datapath=database.ref(`/profile/${profile.uid}/name`)
+        console.log("Profile inside ", profile)
+        const datapath = database.ref(`/profile/${profile.uid}/name`)
 
-     try {
-        datapath.set(newData);
-        Alert.success("Data in Database updated congratulation",4000)
-        
-     } catch (error) {
-        Alert.error(error.message,4000);
-        console.log("error",error.message)
+        try {
+            datapath.set(newData);
+            Alert.success("Data in Database updated congratulation", 4000)
 
-        
-     }
+        } catch (error) {
+            Alert.error(error.message, 4000);
+            console.log("error", error.message)
+
+
+        }
     }
 
     return (
@@ -34,11 +34,11 @@ function DashBoard({ onSignOut }) {
                 <Drawer.Title>
                     DashBoard
                 </Drawer.Title>
-                <ProviderBlock/>
+                
             </Drawer.Header>
             <Drawer.Body>
                 <h3>HEY {profile.name}</h3>
-
+                <ProviderBlock />
                 <Divider />
                 <EditableInput
                     name="nickname"
@@ -47,7 +47,7 @@ function DashBoard({ onSignOut }) {
                     label={<h6 className='mb-2'>Nickname</h6>}
                 />
 
-               <AvatarUploadBtns />
+                <AvatarUploadBtns />
             </Drawer.Body>
             <Drawer.Footer>
                 <Button block color="red" onClick={onSignOut}>
