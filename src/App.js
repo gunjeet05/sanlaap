@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Route, Switch } from 'react-router';
+import { Switch } from 'react-router';
 import 'rsuite/dist/styles/rsuite-default.css';
 import PrivateRoue from './Components/PrivateRoue';
 import PublicRoute from './Components/PublicRoute';
@@ -16,13 +16,11 @@ function App() {
    <Switch>
     <PublicRoute path="/signin"><Signin/></PublicRoute>
    
-    <PrivateRoue path="/home">
+    <PrivateRoue path="/">
     <Home/>
 
     </PrivateRoue>
-    <Route>Thik se search kar\\
-
-    </Route>
+    
    </Switch>
    </ProfileProvider>
   );
