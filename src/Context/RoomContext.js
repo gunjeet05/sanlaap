@@ -1,4 +1,4 @@
-import React ,{ createContext, useEffect, useState } from "react";
+import React ,{ createContext, useContext, useEffect, useState } from "react";
 import { database } from "../misc/firebase";
 import { convertToArray } from "../misc/hepler";
 
@@ -32,3 +32,6 @@ export const RoomProvider=({children})=>{
     </roomContext.Provider>
 
 }
+
+
+export const useChatRoom=()=>useContext(roomContext)
