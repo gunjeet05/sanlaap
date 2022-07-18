@@ -20,7 +20,7 @@ const Chat = () => {
 
   const currentRoom=rooms.find(room=>room.id===chatId)
   const {name, description}=currentRoom;
-  console.log("name in chat.js", name)
+  
   const roomData={
     name,
      description,

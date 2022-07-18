@@ -19,7 +19,7 @@ export const ProfileProvider = function ProfileProvider({ children }) {
                       
                     const { name, createdTime ,avatar} = snap.val();
 
-                    console.log("name",name);
+                   
                     const data = {
                         name,
                         createdTime,

@@ -11,12 +11,11 @@ export const RoomProvider=({children})=>{
     const [room, setRoom]=useState(null);
     useEffect(()=>{
         const roomref=database.ref('rooms');
-        console.log("REferencesssssssss",roomref)
+      
         roomref.on('value', (snap)=>{
             const data=convertToArray(snap.val());
             setRoom(data);
-            console.log("data",data);
-            console.log("snap",snap.val())
+            
 
         })
 
