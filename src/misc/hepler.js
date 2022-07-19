@@ -20,19 +20,29 @@ export function getnameinitials(name){
 
     export  async function getUserupdates(userId , keyToUpdate , value , db ) {
       const updates={}; 
-      updates[`profile/${userId}/${keyToUpdate}`]=value;
+      updates[`/profile/${userId}/${keyToUpdate}`]=value;
 
 
-      const getMessage =db.ref('/messages').orderByChild('author/uid').equalTo(userId).once('value');
-      const getRooms =db.ref('/rooms').orderByChild('lastMessage/author/uid').equalTo(userId).once('value');
+      const getMessage =db
+      .ref('/messages')
+      .orderByChild('author/uid')
+      .equalTo(userId).
+      once('value');
+      const getRooms =db
+      .ref('/rooms')
+      .orderByChild('lastmessage/author/uid')
+      .equalTo(userId)
+      .once('value');
+      
+      
       const [msnap, rsnap]=await Promise.all([getMessage, getRooms]);
       msnap.forEach(messagesnapval=>{
 updates[`messages/${messagesnapval.key}/author/${keyToUpdate}`]=value;
 
-      })
+      });
 
       rsnap.forEach(roomssnap=>{
-         updates[`/messages/${roomssnap.key}/lastmessage/authors/${keyToUpdate}`]=value;
+         updates[`/rooms/${roomssnap.key}/lastmessage/author/${keyToUpdate}`]=value;
 
       })
 
