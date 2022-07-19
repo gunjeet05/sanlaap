@@ -28,8 +28,7 @@ const ChattBottom = () => {
   const {chatId}=useParams();
   const [isLoading, setIsLoading]=useState(false);
 
-  console.log("profile", profile)
-  console.log("chatId", chatId)
+ 
   
   const onInputChange=useCallback((value)=>{
     setInput(value);

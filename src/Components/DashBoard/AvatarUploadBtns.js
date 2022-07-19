@@ -4,6 +4,7 @@ import { Alert, Button, Modal } from 'rsuite'
 import { useProfile } from '../../Context/Profile.context'
 import { useModalState } from '../../misc/CustomHook'
 import { database, storage } from '../../misc/firebase'
+import { getUserupdates } from '../../misc/hepler'
 import ProfileAvatar from '../ProfileAvatar'
 
 const filetype = '.png, .jpeg, .jpg'
@@ -44,7 +45,7 @@ const AvatarUploadBtns = () => {
         const currentFile = ev.target.files;
         if (currentFile.length === 1) {
             const file = currentFile[0];
-            console.log("isValidFile", isValidFile(file));
+           
             if (isValidFile(file)) {
 
                 setImage(file);
@@ -70,8 +71,14 @@ const AvatarUploadBtns = () => {
             });
 
             const downloadUrl = await UploadAVatarResult.ref.getDownloadURL();
-            const userAvatarRef = database.ref(`/profile/${profile.uid}`).child('avatar');
-            await userAvatarRef.set(downloadUrl);
+
+
+            const updates=await getUserupdates(profile.uid, 'avatar', downloadUrl, database)
+
+            await database.ref().update(updates);
+
+
+         
             setIsLoading(false);
             Alert.info("Congratulation Data has been set to Database and Picture is available in Storage.You can use it")
         } catch (error) {
@@ -82,7 +89,7 @@ const AvatarUploadBtns = () => {
     }
 
   
-    console.log("name2",profile.name)
+   
     return (
         <div className='mt-3 text-center cursor-pointer'>
            

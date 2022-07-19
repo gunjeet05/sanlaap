@@ -5,7 +5,7 @@ import ProfileAvatar from '../ProfileAvatar';
 const RoomItems = ({room}) => {
 
   const {createdAt, name, lastmessage}=room;
-  console.log("last message format", lastmessage);
+  
 
 
   return (

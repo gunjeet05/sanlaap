@@ -8,8 +8,7 @@ const ChatRoom = ({topHeight}) => {
   const location=useLocation();
 
   const rooms=useChatRoom();
-    console.log("Height of upper component", topHeight)
-    console.log("Loaction ", location.pathname)
+   
   return (
     <Nav 
     
@@ -21,7 +20,7 @@ const ChatRoom = ({topHeight}) => {
         height:`calc(100%-${topHeight}px)`,
     }}
 
-    activeKey={Location.pathname}
+    activeKey={location.pathname}
     >
 
       {!rooms&&(
