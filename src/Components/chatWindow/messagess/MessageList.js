@@ -5,8 +5,7 @@ import ProfileInfoBtnModal from './ProfileInfoBtnModal';
 
 const MessageList = ({message}) => {
     const {author , createdAt, text }=message;
- console.log("message format", message)
- console.log("author", author)
+
   return (
     <li className='padded mb-1'>
     <div className='d-flex align-item-center font-bolder mb-1'>
