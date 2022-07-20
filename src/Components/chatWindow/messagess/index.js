@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router';
+import { Alert } from 'rsuite';
 import { database } from '../../../misc/firebase';
 import { convertToArray } from '../../../misc/hepler';
 import MessageList from './MessageList';
@@ -7,7 +8,7 @@ import MessageList from './MessageList';
 const ChatMessages = () => {
   const [message, setMessage]=useState(null);
   const {chatId}=useParams();
-console.log("messages", message) 
+
   const canShowMessage= message && message.length>0;
   const chatBoxisEmpty=message&&message.length===0;
 
@@ -29,6 +30,38 @@ console.log("messages", message)
       messageRef.off('value')
     }
   }, [chatId])
+
+
+  const onhandleClick=useCallback(async(uid)=>{
+
+    const adminref=database.ref(`/rooms/${chatId}/admins`)
+    let alrtmsg;
+    await adminref.transaction(admins=>{
+
+      if(admins){
+      if(admins[uid]){
+        admins[uid]=null;
+        alrtmsg="Removed from admin"
+      }
+
+      else{
+        admins[uid]=true;
+
+        alrtmsg="Added as admin";
+
+      }
+
+     
+    }
+  
+    return admins
+  })
+
+  Alert.info(alrtmsg, 4000);
+
+   
+
+  },[])
   return (
     <ul className='msg-list custom-scroll '>
       {
@@ -37,7 +70,7 @@ console.log("messages", message)
       }
       {
         canShowMessage&&
-        message.map(msg=><MessageList key={msg.id} message={msg}/>)
+        message.map(msg=><MessageList key={msg.id} message={msg} onhandleClick={onhandleClick}/>)
       }
       
     
