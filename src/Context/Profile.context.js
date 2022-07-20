@@ -23,13 +23,13 @@ export const ProfileProvider = function ProfileProvider({ children }) {
         let userRef;
         let userStatuRef;
        const authUnsub= auth.onAuthStateChanged(authObj => {
-       console.log("authobj", authObj);
+       
             if (authObj) {
                 userStatuRef =  database.ref(`/status/${authObj.uid} `);
 
                 userRef=database.ref(`/profile/${authObj.uid}`);
 
-                userRef.on('value', (snap) => {
+                userRef.on('value', snap => {
                       
                     const { name, createdTime ,avatar} = snap.val();
 
@@ -49,9 +49,9 @@ export const ProfileProvider = function ProfileProvider({ children }) {
 
                 });
 
-                database.ref('.info/connected').on('value',(snapshot)=> {
-                    // If we're not currently connected, don't do anything.
-                    if (snapshot.val() === false) {
+                database.ref('.info/connected').on('value',snapshot=> {
+                
+                    if (!!snapshot.val() === false) {
                         return;
                     };
                  
@@ -59,11 +59,7 @@ export const ProfileProvider = function ProfileProvider({ children }) {
                 userStatuRef
                 .onDisconnect()
                 .set(isOfflineForDatabase)
-                .then(()=> {
-                        
-                
-                        userStatuRef.set(isOnlineForDatabase);
-                    });
+                .then(()=> {userStatuRef.set(isOnlineForDatabase)});
                 });
                 
 

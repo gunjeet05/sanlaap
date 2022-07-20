@@ -10,13 +10,17 @@ import { auth, database } from '../../misc/firebase';
 function DashBoardToggle() {
     const {isOpen, open,close}=useModalState();
     const onSignOut=useCallback(()=>{
-    database.ref(`/status/${auth.currentUser.uid}`).set(isOfflineForDatabase).then(()=>{
+    database
+    .ref(`/status/${auth.currentUser.uid}`)
+    .set(isOfflineForDatabase)
+    .then(()=>{
       auth.signOut();
       Alert.info("Signed out", 4000)
       close();
-    }).catch((err)=>{
-      Alert.error(err.message, 4000)
     })
+    .catch(err=>{
+      Alert.error(err.message, 4000)
+    });
 
         
 
