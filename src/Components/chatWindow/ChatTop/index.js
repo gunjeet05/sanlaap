@@ -3,10 +3,12 @@ import { Link } from 'react-router-dom'
 import { Icon , ButtonToolbar} from 'rsuite'
 import { useCurrentRoom } from '../../../Context/Currentroom.context'
 import { useMediaQuery } from '../../../misc/CustomHook'
+import EditRoomBtnDrawer from './EditRoomBtnDrawer'
 import RoominfoButtonModal from './RoominfoButtonModal'
 
 const Chatttop = () => {
 const name=useCurrentRoom( v=>v.name )
+const isAdmin=useCurrentRoom(v=>v.isAdmin);
 
 
 const isMobile=useMediaQuery('(max-width:992px)')
@@ -21,7 +23,11 @@ const isMobile=useMediaQuery('(max-width:992px)')
       
       <span className='text-disappear'>{name}</span>
       </h4>
-      <ButtonToolbar className="whits-nowrap">Todo </ButtonToolbar>
+      <ButtonToolbar className="whits-nowrap">
+        {isAdmin&&
+        
+        <EditRoomBtnDrawer />}
+       </ButtonToolbar>
 
     </div>
 

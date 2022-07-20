@@ -9,7 +9,10 @@ export function getnameinitials(name){
     
        return namearray[0][0]
     }
+    export function convertToArraywithoutid(snapVal){
+      return snapVal?Object.keys(snapVal):[]
 
+    }
 
     export function convertToArray(snapVal){
       return snapVal?Object.keys(snapVal).map(roomId=>{
