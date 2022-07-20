@@ -2,6 +2,7 @@ import React, { memo } from 'react'
 import TimeAgo from 'react-timeago'
 import { Button } from 'rsuite';
 import { useCurrentRoom } from '../../../Context/Currentroom.context';
+import { useHover } from '../../../misc/CustomHook';
 import { auth } from '../../../misc/firebase';
 import PresenceDot from '../../PresenceDot';
 import ProfileAvatar from '../../ProfileAvatar';
@@ -10,16 +11,18 @@ import ProfileInfoBtnModal from './ProfileInfoBtnModal';
 const MessageList = ({message, onhandleClick}) => {
     const {author , createdAt, text }=message;
 
+    const[selfRef, isHovered]=useHover();
     const isAdmin=useCurrentRoom(v=>v.isAdmin);
     const admins=useCurrentRoom(v=>v.admins);
     const isMsgauthorAdmin=admins.includes(author.uid);
     const isAuthor=auth.currentUser.uid===author.uid;
 
-    const canMakeAdmin=isAdmin&&!isAuthor;
+    const canMakeAdmin=isAdmin && !isAuthor;
 
 
   return (
-    <li className='padded mb-1'>
+    <li className={`padded mb-1 cursror-pointer ${isHovered?'bg-black-02':''}`} ref={selfRef}>
+
     <div className='d-flex align-item-center font-bolder mb-1'>
 
       <PresenceDot uid={author.uid}/>
