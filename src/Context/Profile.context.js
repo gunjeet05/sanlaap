@@ -1,17 +1,5 @@
 import React, { createContext,   useContext, useEffect, useState } from "react";
-import firebase from "firebase/app";
 import { auth, database } from "../misc/firebase";
-
-
-export const isOfflineForDatabase = {
-    state: 'offline',
-    last_changed: firebase.database.ServerValue.TIMESTAMP,
-};
-
-const isOnlineForDatabase = {
-    state: 'online',
-    last_changed: firebase.database.ServerValue.TIMESTAMP,
-};
 
 
 const ProfileContext = createContext();
@@ -21,15 +9,13 @@ export const ProfileProvider = function ProfileProvider({ children }) {
     const [isLoading, setisLoading] = useState(true)
     useEffect(() => {
         let userRef;
-        let userStatuRef;
        const authUnsub= auth.onAuthStateChanged(authObj => {
        
             if (authObj) {
-                userStatuRef =  database.ref(`/status/${authObj.uid} `);
 
                 userRef=database.ref(`/profile/${authObj.uid}`);
 
-                userRef.on('value', snap => {
+                userRef.on('value', (snap) => {
                       
                     const { name, createdTime ,avatar} = snap.val();
 
@@ -44,24 +30,7 @@ export const ProfileProvider = function ProfileProvider({ children }) {
                     };
                     setProfile(data);
                     setisLoading(false);
-
-
-
                 });
-
-                database.ref('.info/connected').on('value',snapshot=> {
-                
-                    if (!!snapshot.val() === false) {
-                        return;
-                    };
-                 
-                    
-                userStatuRef
-                .onDisconnect()
-                .set(isOfflineForDatabase)
-                .then(()=> {userStatuRef.set(isOnlineForDatabase)});
-                });
-                
 
 
 
@@ -72,12 +41,6 @@ export const ProfileProvider = function ProfileProvider({ children }) {
                 if(userRef){
                     userRef.off();
                 }
-
-                if(userStatuRef){
-                    userStatuRef.off();
-                }
-
-                database.ref('.info/connected').off();
                 setProfile(null);
                 setisLoading(false);
 
@@ -88,15 +51,9 @@ export const ProfileProvider = function ProfileProvider({ children }) {
 
         return ()=>{
             authUnsub();
-            database.ref('.info/connected').off();
             if(userRef){
                 userRef.off();
             }
-
-            if(userStatuRef){
-                userStatuRef.off();
-            }
-           
         }
     },
     
