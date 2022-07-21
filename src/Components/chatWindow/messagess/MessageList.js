@@ -9,7 +9,7 @@ import ProfileAvatar from '../../ProfileAvatar';
 import IconButtonControl from './IconButtonControl';
 import ProfileInfoBtnModal from './ProfileInfoBtnModal';
 
-const MessageList = ({message, onhandleClick, handleLikeClick}) => {
+const MessageList = ({message, onhandleClick, handleLikeClick, handleDelete}) => {
     const {author , createdAt, text, likes, likeCount }=message;
     const isMobile=useMediaQuery('(max-width:992px)')
     const[selfRef, isHovered]=useHover();
@@ -20,6 +20,7 @@ const MessageList = ({message, onhandleClick, handleLikeClick}) => {
     const isLiked=likes&&Object.keys(likes).includes(auth.currentUser.uid)
     const canMakeAdmin=isAdmin && !isAuthor;
     const canShowIcons=isMobile||isHovered;
+
 
 
   return (
@@ -57,6 +58,19 @@ const MessageList = ({message, onhandleClick, handleLikeClick}) => {
     onLClick={()=>handleLikeClick(message.id)} 
     badgeContent={likeCount}
      />
+{isAuthor&&
+
+
+<IconButtonControl 
+isVisible={canShowIcons}
+iconName="close"
+tooltip='Delete'
+onLClick={()=>{handleDelete(message.id)}} 
+
+
+/>    
+
+}
     
 
 

@@ -13,7 +13,7 @@ const IconButtonControl = ({isVisible, iconName, tooltip, onLClick, badgeContent
     
     }
   return (
-    <div className='ml-2' style={{visiblity:isVisible?'visible':'hidden'}}>
+    <div className='ml-2' style={{ visibility: isVisible ? 'visible' : 'hidden' }}>
         <ControlBadge condition={badgeContent}>
             <Whisper
             placement='top'

@@ -108,6 +108,45 @@ const ChatMessages = () => {
 
   },[ ])
 
+  const handleDelete=useCallback(async (messageId)=>{
+    if(!window.confirm("Do you really want to delete the message?")){
+      return ;
+    }
+    const isLast=message[message.length-1].id===messageId;
+
+    const updates={};
+    updates[`/messages/${messageId}`]=null;
+    if(isLast&&message.length>1){
+      updates[`/rooms/${chatId}/lastmessage`]={
+        ...message[message.length-2],
+        messageId: message[message.length-2].id, 
+
+      }
+
+
+    }
+
+    if(isLast&&message.length===1){
+      updates[`/rooms/${chatId}/lastmessage`]=null;
+
+    }
+
+    try {
+
+      await database.ref().update(updates);
+      Alert.success("Message Deleted Sucessfully", 4000)
+      
+    } catch (error) {
+
+Alert.error(error.message, 4000);
+
+
+
+      
+    }
+
+  },[chatId, message])
+
 
  
   return (
@@ -118,7 +157,7 @@ const ChatMessages = () => {
       }
       {
         canShowMessage&&
-        message.map(msg=><MessageList key={msg.id} message={msg} onhandleClick={onhandleClick} handleLikeClick={handleLikeClick}/>)
+        message.map(msg=><MessageList key={msg.id} message={msg} onhandleClick={onhandleClick} handleLikeClick={handleLikeClick} handleDelete={handleDelete}/>)
       }
       
     
