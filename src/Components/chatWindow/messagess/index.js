@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router';
 import { Alert } from 'rsuite';
-import { database } from '../../../misc/firebase';
+import { auth, database } from '../../../misc/firebase';
 import { convertToArray } from '../../../misc/hepler';
 import MessageList from './MessageList';
 
@@ -61,7 +61,55 @@ const ChatMessages = () => {
 
    
 
-  },[])
+  },[chatId])
+
+
+
+  const handleLikeClick=useCallback(async msgId=>{
+
+    const messageRef=database.ref(`/messages/${msgId}`)
+    let alrtmsg;
+    const {uid}=auth.currentUser;
+    
+    await messageRef.transaction(msg=>{
+
+      if(msg){
+      if(msg.likes&&msg.likes[uid]){
+        msg.likeCount-=1;
+
+        msg.likes[uid]=null;
+
+      
+
+        alrtmsg="Romoved Like Click again to Like"
+      }
+
+      else{
+        msg.likeCount+=1;
+        if(!msg.likes){
+          msg.likes={};
+
+        }
+        msg.likes[uid]=true;
+        alrtmsg="Added Like";
+
+      }
+
+     
+    }
+  
+    return msg;
+
+  })
+
+  Alert.info(alrtmsg, 4000);
+
+   
+
+  },[ ])
+
+
+ 
   return (
     <ul className='msg-list custom-scroll '>
       {
@@ -70,7 +118,7 @@ const ChatMessages = () => {
       }
       {
         canShowMessage&&
-        message.map(msg=><MessageList key={msg.id} message={msg} onhandleClick={onhandleClick}/>)
+        message.map(msg=><MessageList key={msg.id} message={msg} onhandleClick={onhandleClick} handleLikeClick={handleLikeClick}/>)
       }
       
     

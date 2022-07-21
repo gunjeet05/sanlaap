@@ -16,7 +16,8 @@ function assembleMessage(profile, chatId){
       createdAt:profile.createdTime, 
       ...(profile.avatar?{avatar:profile.avatar}:{})
     }, 
-    createdAt:firebase.database.ServerValue.TIMESTAMP
+    createdAt:firebase.database.ServerValue.TIMESTAMP,
+    likeCount:0,
   }
 
 }
@@ -75,6 +76,9 @@ if(ev.keyCode===13){
 
 }
   }
+
+
+  
   return (
     <div>
      <InputGroup>

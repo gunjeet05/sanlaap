@@ -2,23 +2,24 @@ import React, { memo } from 'react'
 import TimeAgo from 'react-timeago'
 import { Button } from 'rsuite';
 import { useCurrentRoom } from '../../../Context/Currentroom.context';
-import { useHover } from '../../../misc/CustomHook';
+import { useHover, useMediaQuery } from '../../../misc/CustomHook';
 import { auth } from '../../../misc/firebase';
 import PresenceDot from '../../PresenceDot';
 import ProfileAvatar from '../../ProfileAvatar';
 import IconButtonControl from './IconButtonControl';
 import ProfileInfoBtnModal from './ProfileInfoBtnModal';
 
-const MessageList = ({message, onhandleClick}) => {
-    const {author , createdAt, text }=message;
-
+const MessageList = ({message, onhandleClick, handleLikeClick}) => {
+    const {author , createdAt, text, likes, likeCount }=message;
+    const isMobile=useMediaQuery('(max-width:992px)')
     const[selfRef, isHovered]=useHover();
     const isAdmin=useCurrentRoom(v=>v.isAdmin);
     const admins=useCurrentRoom(v=>v.admins);
     const isMsgauthorAdmin=admins.includes(author.uid);
     const isAuthor=auth.currentUser.uid===author.uid;
-
+    const isLiked=likes&&Object.keys(likes).includes(auth.currentUser.uid)
     const canMakeAdmin=isAdmin && !isAuthor;
+    const canShowIcons=isMobile||isHovered;
 
 
   return (
@@ -49,12 +50,12 @@ const MessageList = ({message, onhandleClick}) => {
 
 
     <IconButtonControl 
-    {...(true?{color:'red'}:{})}
-    isVisible
+    {...(isLiked?{color:'red'}:{})}
+    isVisible={canShowIcons}
     iconName="heart"
     tooltip='Like'
-    onClick={()=>{}} 
-    badgeContent={5}
+    onLClick={()=>handleLikeClick(message.id)} 
+    badgeContent={likeCount}
      />
     
 

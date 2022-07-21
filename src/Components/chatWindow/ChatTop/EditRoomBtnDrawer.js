@@ -13,7 +13,7 @@ const EditRoomBtnDrawer = () => {
     const name = useCurrentRoom(v => v.name);
     const description = useCurrentRoom(v => v.description);
     const isMobile=useMediaQuery("(max-width:992px)")
-console.log("Chat Id", chatId)
+
     const update=(key, value)=>{
         database
         .ref(`rooms/${chatId}`)

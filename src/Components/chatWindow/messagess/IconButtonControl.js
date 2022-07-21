@@ -3,13 +3,13 @@ import { Badge, Icon, IconButton, Tooltip, Whisper } from 'rsuite'
 
 
 
-const IconButtonControl = ({isVisible, iconName, tooltip, onclick, badgeContent, ...props}) => {
+const IconButtonControl = ({isVisible, iconName, tooltip, onLClick, badgeContent, ...props}) => {
 
     const ControlBadge=({condition ,children })=>{
         return condition?<Badge content={condition}>
             {children}
         </Badge>:
-        {children}
+        children
     
     }
   return (
@@ -27,7 +27,7 @@ const IconButtonControl = ({isVisible, iconName, tooltip, onclick, badgeContent,
             </Tooltip>}>
 
                 <IconButton {...props}
-                  onclick={onclick}
+                  onClick={onLClick}
                   circle 
                   size='xs'
                   icon={<Icon icon={iconName} />}
