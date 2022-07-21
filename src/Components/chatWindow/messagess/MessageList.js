@@ -6,6 +6,7 @@ import { useHover } from '../../../misc/CustomHook';
 import { auth } from '../../../misc/firebase';
 import PresenceDot from '../../PresenceDot';
 import ProfileAvatar from '../../ProfileAvatar';
+import IconButtonControl from './IconButtonControl';
 import ProfileInfoBtnModal from './ProfileInfoBtnModal';
 
 const MessageList = ({message, onhandleClick}) => {
@@ -44,6 +45,22 @@ const MessageList = ({message, onhandleClick}) => {
       </ProfileInfoBtnModal>
             <TimeAgo 
     date={new Date(createdAt)}  className='font-normal text-black-45  ml-2'/>
+
+
+
+    <IconButtonControl 
+    {...(true?{color:'red'}:{})}
+    isVisible
+    iconName="heart"
+    tooltip='Like'
+    onClick={()=>{}} 
+    badgeContent={5}
+     />
+    
+
+
+
+    
       
       </div> <div className='ml-3'>
          <span className='word-break-all ml-3' >{text}</span>
