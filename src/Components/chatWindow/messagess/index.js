@@ -1,37 +1,84 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router';
-import { Alert } from 'rsuite';
+import { Alert, Button } from 'rsuite';
 import { auth, database, storage } from '../../../misc/firebase';
 import { convertToArray, groupby } from '../../../misc/hepler';
 import MessageList from './MessageList';
 
 
+const messageRef=database.ref('/messages');
 
+
+
+const PAGE_SIZE = 15;
+
+
+function shouldScrollToBottom(node, threshold = 30) {
+  const percentage =
+    (100 * node.scrollTop) / (node.scrollHeight - node.clientHeight) || 0;
+
+  return percentage > threshold;
+}
 const ChatMessages = () => {
   const [message, setMessage]=useState(null);
   const {chatId}=useParams();
+  const [limit, setLimit] = useState(PAGE_SIZE);
+  const selfRef = useRef();
 
   const canShowMessage= message && message.length>0;
   const chatBoxisEmpty=message&&message.length===0;
 
+  const loadMessages = useCallback(limitToLast => {
+      const node = selfRef.current;
+      
+      messageRef.off();
+
+      messageRef
+        .orderByChild('roomId')
+        .equalTo(chatId)
+        .limitToLast(limitToLast || PAGE_SIZE)
+        .on('value', snap => {
+          const data = convertToArray(snap.val());
+          setMessage(data);
+
+          if (shouldScrollToBottom(node)) {
+            node.scrollTop = node.scrollHeight;
+          }
+        });
+
+      setLimit(p => p + PAGE_SIZE);
+    },
+    [chatId]
+  );
+
+  const onLoadMore = useCallback(() => {
+    const node = selfRef.current;
+    const oldHeight = node.scrollHeight;
+
+    loadMessages(limit);
+
+    setTimeout(() => {
+      const newHeight = node.scrollHeight;
+      node.scrollTop = newHeight - oldHeight;
+    }, 200);
+  }, [loadMessages, limit]);
+
   useEffect(()=>{
-    const messageRef=database.ref("/messages");
-    messageRef
-    .orderByChild('roomId')
-    .equalTo(chatId)
-    .on('value', (snap)=>{
-      const data=convertToArray(snap.val());
-      setMessage(data);
+   
+  const node=selfRef.current;
+  loadMessages();
+  setTimeout(() => {
+    node.scrollTop = node.scrollHeight;
+  }, 200);
+
+  return ()=>{
+    messageRef.off('value')
+  }
+    },[loadMessages])
 
 
-
-    })
-
-
-    return ()=>{
-      messageRef.off('value')
-    }
-  }, [chatId])
+    
+ 
 
 
   const onhandleClick=useCallback(async(uid)=>{
@@ -69,11 +116,11 @@ const ChatMessages = () => {
 
   const handleLikeClick=useCallback(async msgId=>{
 
-    const messageRef=database.ref(`/messages/${msgId}`)
+    const messageRefs=database.ref(`/messages/${msgId}`)
     let alrtmsg;
     const {uid}=auth.currentUser;
     
-    await messageRef.transaction(msg=>{
+    await messageRefs.transaction(msg=>{
 
       if(msg){
       if(msg.likes&&msg.likes[uid]){
@@ -205,7 +252,18 @@ items.push(...msgs);
 
  
   return (
-    <ul className='msg-list custom-scroll '>
+  
+      
+      
+      <ul ref={selfRef} className="msg-list custom-scroll">
+      {message && message.length >= PAGE_SIZE && (
+        <li className="text-center mt-2 mb-2">
+          <Button onClick={onLoadMore} color="green">
+            Load more
+          </Button>
+        </li>
+      )}
+      
       {
         chatBoxisEmpty&&
         <span> no messages yet</span>
