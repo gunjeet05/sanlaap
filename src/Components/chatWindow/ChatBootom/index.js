@@ -5,6 +5,7 @@ import { Alert, Icon, Input, InputGroup } from 'rsuite';
 import { useProfile } from '../../../Context/Profile.context';
 import { database } from '../../../misc/firebase';
 import AttachMentBtnModal from './AttachMentBtnModal';
+import MicButtonModal from './MicButtonModal';
 
 // We basically want to save the data in this format only to the database under new root
 
@@ -118,8 +119,10 @@ if(ev.keyCode===13){
   
   return (
     <div>
+      
      <InputGroup >
      <AttachMentBtnModal afteruploadfile={afteruploadfile}/>
+     <MicButtonModal  afteruploadfile={afteruploadfile}/>
      <Input 
      placeholder="Enter your message Here"
      value={input}
