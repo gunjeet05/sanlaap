@@ -7,10 +7,11 @@ import { auth } from '../../../misc/firebase';
 import PresenceDot from '../../PresenceDot';
 import ProfileAvatar from '../../ProfileAvatar';
 import IconButtonControl from './IconButtonControl';
+import ImageBtnModal from './ImageBtnModal';
 import ProfileInfoBtnModal from './ProfileInfoBtnModal';
 
 const MessageList = ({message, onhandleClick, handleLikeClick, handleDelete}) => {
-    const {author , createdAt, text, likes, likeCount }=message;
+    const {author , createdAt, text,file,  likes, likeCount }=message;
     const isMobile=useMediaQuery('(max-width:992px)')
     const[selfRef, isHovered]=useHover();
     const isAdmin=useCurrentRoom(v=>v.isAdmin);
@@ -21,6 +22,18 @@ const MessageList = ({message, onhandleClick, handleLikeClick, handleDelete}) =>
     const canMakeAdmin=isAdmin && !isAuthor;
     const canShowIcons=isMobile||isHovered;
 
+  const renderFile=(files)=>{
+
+    if(file.contentType.includes('image')){
+    
+      
+      return <div className='height-220'><ImageBtnModal src={files.url} filename={files.name}  /></div>
+    }
+    
+
+    return <a href={files.url}>Download {files.name}</a>
+
+  }
 
 
   return (
@@ -78,7 +91,18 @@ onLClick={()=>{handleDelete(message.id)}}
     
       
       </div> <div className='ml-3'>
-         <span className='word-break-all ml-3' >{text}</span>
+
+        {text&& 
+          <span className='word-break-all ml-3' >{text}</span>
+        }
+
+        {
+          file&& 
+          renderFile(file)
+
+        }
+
+       
          </div>
     
     </li>
