@@ -24,7 +24,16 @@ const MessageList = ({message, onhandleClick, handleLikeClick, handleDelete}) =>
 
   const renderFile=(files)=>{
 
-    if(file.contentType.includes('image')){
+
+    if(files.contentType.includes('audio')){
+      // eslint-disable-next-line jsx-a11y/media-has-caption
+      return <audio controls>
+        <source src={file.url} type="audio/mp3" />
+        your browser does not support the audio
+      </audio>
+    }
+
+    if(files.contentType.includes('image')){
     
       
       return <div className='height-220'><ImageBtnModal src={files.url} filename={files.name}  /></div>
@@ -78,7 +87,7 @@ const MessageList = ({message, onhandleClick, handleLikeClick, handleDelete}) =>
 isVisible={canShowIcons}
 iconName="close"
 tooltip='Delete'
-onLClick={()=>{handleDelete(message.id)}} 
+onLClick={()=>{handleDelete(message.id, file)}} 
 
 
 />    

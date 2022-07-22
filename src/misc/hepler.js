@@ -53,3 +53,20 @@ updates[`messages/${messagesnapval.key}/author/${keyToUpdate}`]=value;
       return updates;
 
     }
+
+
+
+    export function groupby(messages, groupKeyFn){
+   return messages.reduce((result, items)=>{
+      const groupingKey=groupKeyFn(items);
+      if(!result[groupingKey]){
+         result[groupingKey]=[];
+
+      }
+
+      result[groupingKey].push(items);
+
+      return result;
+
+   }, {})
+    }

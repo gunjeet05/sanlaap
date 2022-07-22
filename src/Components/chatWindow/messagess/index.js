@@ -1,9 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router';
 import { Alert } from 'rsuite';
-import { auth, database } from '../../../misc/firebase';
-import { convertToArray } from '../../../misc/hepler';
+import { auth, database, storage } from '../../../misc/firebase';
+import { convertToArray, groupby } from '../../../misc/hepler';
 import MessageList from './MessageList';
+
+
 
 const ChatMessages = () => {
   const [message, setMessage]=useState(null);
@@ -108,7 +110,7 @@ const ChatMessages = () => {
 
   },[ ])
 
-  const handleDelete=useCallback(async (messageId)=>{
+  const handleDelete=useCallback(async (messageId, file)=>{
     if(!window.confirm("Do you really want to delete the message?")){
       return ;
     }
@@ -134,7 +136,24 @@ const ChatMessages = () => {
     try {
 
       await database.ref().update(updates);
-      Alert.success("Message Deleted Sucessfully", 4000)
+      
+       Alert.success("Message Deleted Sucessfully", 4000)
+      
+    } catch (error) {
+// eslint-disable-next-line consistent-return
+ return Alert.error(error.message, 4000);
+
+
+
+
+      
+    }
+
+    try {
+
+    const fileRef=storage.refFromURL(file.url)
+    fileRef.delete()
+    
       
     } catch (error) {
 
@@ -145,7 +164,43 @@ Alert.error(error.message, 4000);
       
     }
 
+
+
+
+
+
   },[chatId, message])
+
+
+  const renderMessage=()=>{
+    const group=groupby(message, items=>new Date(items.createdAt).toDateString()
+
+    );
+
+
+
+    const items=[];
+    Object.keys(group).forEach((date)=>{
+
+items.push(<li key={date} className="text-center mb-1 padded">
+  {date}
+
+</li>)
+
+const msgs =group[date].map(msg=>(
+  <MessageList 
+  key={msg.id}
+   message={msg} 
+   onhandleClick={onhandleClick} 
+   handleLikeClick={handleLikeClick}
+    handleDelete={handleDelete}/>
+
+))
+items.push(...msgs);
+
+    });
+  return items;
+  }
 
 
  
@@ -157,7 +212,9 @@ Alert.error(error.message, 4000);
       }
       {
         canShowMessage&&
-        message.map(msg=><MessageList key={msg.id} message={msg} onhandleClick={onhandleClick} handleLikeClick={handleLikeClick} handleDelete={handleDelete}/>)
+
+        renderMessage()
+       
       }
       
     
