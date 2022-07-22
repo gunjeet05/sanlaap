@@ -2,11 +2,11 @@ import { ReactMic } from 'react-mic';
 
 import React, { useCallback, useState } from 'react'
 import { Alert, Icon, InputGroup } from 'rsuite';
-import { useParams } from 'react-router';
+
 import { storage } from '../../../misc/firebase';
 
 const MicButtonModal = ({afteruploadfile}) => {
-    const {chatId}=useParams();
+    const { chatId } = window;
     
     const [isRecording,setIsRecording]=useState();
     const[isLoading, setIsLoading]=useState(false);

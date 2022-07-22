@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { useParams } from 'react-router'
 import { Loader } from 'rsuite'
 import ChattBottom from '../../Components/chatWindow/ChatBootom'
@@ -14,6 +14,9 @@ const Chat = () => {
 
   const {chatId}=useParams();
   const rooms=useChatRoom();
+  useEffect(() => {
+    window.chatId = chatId;
+  }, [chatId]);
   
 
  

@@ -83,7 +83,7 @@ if(ev.keyCode===13){
     setIsLoading(true);
     const updates={};
     files.forEach(file=>{
-      const messageData=assembleMessage(profile, chatId);
+      const messageData=assembleMessage(profile, window.chatId);
       messageData.file=file;
       const messageId=database.ref('messages').push().key;
       updates[ `/messages/${messageId}`]=messageData;
@@ -91,7 +91,7 @@ if(ev.keyCode===13){
     })
 
     const lastmessageId=Object.keys(updates).pop();
-    updates[`/rooms/${chatId}/lastmessage`]={
+    updates[`/rooms/${window.chatId}/lastmessage`]={
       ...updates[lastmessageId], 
       messageId:lastmessageId
     }
@@ -113,7 +113,7 @@ if(ev.keyCode===13){
     }
 
 
-  },[chatId, profile])
+  },[profile])
 
 
   
